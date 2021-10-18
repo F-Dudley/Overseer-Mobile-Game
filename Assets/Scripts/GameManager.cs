@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using Unity.AI.Navigation;
 using TMPro;
 
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
     [Header("Game Events")]
     public UnityEvent addScore = new UnityEvent();
 
+    private Coroutine gameWavesProcess;
+
     #region Unity Functions
     private void Awake()
     {
@@ -37,7 +40,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start() {
-        InitializeScene();
+
     }
 
     private void OnEnable() {
@@ -51,16 +54,39 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Game Functions
-    private void InitializeScene() {
-        score = 0;
+    public void InitializeScene() {
+        ResetScore();
         gameActive = true;
 
-        StartCoroutine(GameWaves());
+        gameWavesProcess = StartCoroutine(GameWaves());
+    }
+
+    public void UpdateNavMesh() {
+        navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
     }
 
     private void AddScore() {
         score += 1;
         scoreText.text = "Score: " + score;
+    }
+
+    private void ResetScore() {
+        score = 0;
+        scoreText.text = "Score: " + score;
+    }
+
+    public void EndScene() {
+        gameActive = false;
+        StopCoroutine(gameWavesProcess);
+
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        if(enemies.Length > 0) {
+            foreach (GameObject enemy in enemies)
+            {
+                Destroy(enemy);
+            }            
+        }
+
     }
 
     IEnumerator GameWaves() {
