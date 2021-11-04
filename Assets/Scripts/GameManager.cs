@@ -11,14 +11,16 @@ public class GameManager : MonoBehaviour
     [Header("Main Variables")]
     public int score;
 
+    private static GameObject gameEnviroment;
+
     [HideInInspector]
     public static GameManager instance;
     private NavMeshSurface navMeshSurface;
 
     [Header("Game References")]
     public bool gameActive;
-    public Transform spawnPosition;
-    public Transform targetPosition;
+    private Transform spawnPosition;
+    private Transform targetPosition;
 
     [Space]
 
@@ -28,7 +30,6 @@ public class GameManager : MonoBehaviour
     public GameObject basicEnemy;
 
     [Header("Game Events")]
-    public UnityEvent addScore = new UnityEvent();
 
     private Coroutine gameWavesProcess;
 
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void OnEnable() {
-        addScore.AddListener(AddScore);
+
     }
 
     private void Update()
@@ -54,15 +55,18 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Game Functions
+
+    public static GameObject SetGameEnviroment {
+        set { gameEnviroment = value; }
+    }
+
     public void InitializeScene() {
         ResetScore();
         gameActive = true;
-
-        gameWavesProcess = StartCoroutine(GameWaves());
     }
 
     public void UpdateNavMesh() {
-        navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+        
     }
 
     private void AddScore() {
