@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
 
     #region Game Functions
 
-    public static GameObject SetGameEnviroment {
+    public static GameObject GameEnviroment {
         set { gameEnviroment = value; }
     }
 
