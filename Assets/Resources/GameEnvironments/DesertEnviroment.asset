@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6d359167a8a42142b43b80debd8e928, type: 3}
+  m_Name: DesertEnviroment
+  m_EditorClassIdentifier: 
+  environmentName: Desert Enviroment
+  environmentDescription: It's very Dusty..
+  environmentPicture: {fileID: 0}
+  environmentPrefab: {fileID: 8161661684122035019, guid: 9af42c533c18fcd438e0e02137e7df43, type: 3}

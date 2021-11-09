@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class TerrainAnimation : MonoBehaviour
 {
@@ -34,9 +35,9 @@ public class TerrainAnimation : MonoBehaviour
 
     private void AnimationStart(Vector3 _initialEnviromentScale)
     {
-        LeanTween.scale(this.gameObject, _initialEnviromentScale, animationTime)
-        .setEaseOutCubic()
-        .setOnComplete(() => {
+        transform.DOScale(_initialEnviromentScale, animationTime)
+        .SetEase(Ease.OutQuad)
+        .OnComplete(() => {
             animationComplete = true;
         });
     }

@@ -15,6 +15,8 @@ public class MenuManager : MonoBehaviour
     public GameObject mainButtonsMenu;
     public GameObject gameChoicesMenu;
 
+    public GameObject returnButton;
+
     [Space]
 
     [Header("Main Menu Objects")]
@@ -22,8 +24,10 @@ public class MenuManager : MonoBehaviour
     public Button settingsButton;
     public Button quitButton;
 
-    [Header("Settings Menu Objects")]
-    public Button settingsReturnButton;
+    [Header("Play Menu Objects")]
+    public RectTransform buttonsContainer;
+
+    public GameObject environmentButtonPrefab;
 
     #region Unity Functions
     private void Start()
@@ -32,7 +36,9 @@ public class MenuManager : MonoBehaviour
         settingsButton.onClick.AddListener(SettingsButtonClicked);
         quitButton.onClick.AddListener(QuitButtonClicked);
 
-        LoadEnviromentChoices();
+        returnButton.GetComponentInChildren<Button>().onClick.AddListener(ReturnToMainMenu);
+
+        LoadEnvironmentChoices();
     }
 
     private void Update()
@@ -45,28 +51,65 @@ public class MenuManager : MonoBehaviour
     public void PlayButtonClicked()
     {
         OpenGameChoices();
+        OpenReturnButton();
     }
 
     public void SettingsButtonClicked()
     {
-
+        OpenSettingsMenu();
+        OpenReturnButton();
     }
 
     public void QuitButtonClicked()
     {
-
+        Application.Quit();
     }
     #endregion
 
     #region PlaySelector
-    private void LoadEnviromentChoices()
+    private void LoadEnvironmentChoices()
     {
+        EnvironmentAsset[] downloadedEnvironments = Resources.LoadAll<EnvironmentAsset>("GameEnvironments");
 
+        float prefabHeight = environmentButtonPrefab.GetComponent<RectTransform>().sizeDelta.y;
+        buttonsContainer.sizeDelta = new Vector2(buttonsContainer.sizeDelta.x, (prefabHeight + 20) * downloadedEnvironments.Length);
+
+        foreach (EnvironmentAsset environment in downloadedEnvironments)
+        {
+            GameObject buttonElement = Instantiate<GameObject>(environmentButtonPrefab, Vector3.zero, Quaternion.identity);
+            buttonElement.transform.SetParent(buttonsContainer);
+
+            buttonElement.transform.localScale = Vector3.one;
+
+            EnvironmentMenuElement buttonElementScript = buttonElement.GetComponent<EnvironmentMenuElement>();
+            buttonElementScript.AssetToSelect = environment;
+        }
     }
 
     #endregion
 
     #region MenuStates
+
+    private void OpenReturnButton()
+    {
+        returnButton.SetActive(true);
+    }
+
+    private void CloseReturnButton()
+    {
+        returnButton.SetActive(false);
+    }
+
+    public void ReturnToMainMenu()
+    {
+        mainMenu.SetActive(true);
+        settingsMenu.SetActive(false);
+
+        mainButtonsMenu.SetActive(true);
+        gameChoicesMenu.SetActive(false);
+
+        returnButton.SetActive(false);
+    }
 
     public void OpenSettingsMenu()
     {
@@ -80,15 +123,6 @@ public class MenuManager : MonoBehaviour
         {
             mainButtonsMenu.SetActive(false);
             gameChoicesMenu.SetActive(true);
-        }
-    }
-
-    public void CloseGameChoices()
-    {
-        if (mainMenu.activeSelf)
-        {
-            mainButtonsMenu.SetActive(true);
-            gameChoicesMenu.SetActive(false);
         }
     }
 
