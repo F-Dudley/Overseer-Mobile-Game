@@ -6,12 +6,11 @@ using UnityEngine.UI;
 using Unity.AI.Navigation;
 using TMPro;
 
+[System.Serializable]
 public class GameManager : MonoBehaviour
 {
     [Header("Main Variables")]
     public int score;
-
-    private static GameObject gameEnviroment;
 
     [HideInInspector]
     public static GameManager instance;
@@ -19,19 +18,27 @@ public class GameManager : MonoBehaviour
 
     [Header("Game References")]
     public bool gameActive;
-    private Transform spawnPosition;
-    private Transform targetPosition;
-
-    [Space]
-
-    public TextMeshProUGUI scoreText;
 
     [Header("Game Enemies")]
     public GameObject basicEnemy;
 
     [Header("Game Events")]
-
     private Coroutine gameWavesProcess;
+
+    [Header("Enviroment References")]
+    [SerializeField] private static GameObject gameEnviroment;
+    [SerializeField] private static GameEnviroment gameEnviromentScript;
+
+    public static GameObject GameEnviroment
+    {
+        get { 
+            return gameEnviroment; 
+        }
+        set {
+            gameEnviroment = value; 
+            gameEnviromentScript = value.GetComponent<GameEnviroment>();
+        }
+    }
 
     #region Unity Functions
     private void Awake()
@@ -41,7 +48,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start() {
-
+        Instantiate(gameEnviroment, new Vector3(0, 0, 50), Quaternion.identity);
     }
 
     private void OnEnable() {
@@ -56,56 +63,24 @@ public class GameManager : MonoBehaviour
 
     #region Game Functions
 
-    public static GameObject GameEnviroment {
-        set { gameEnviroment = value; }
-    }
-
+    #region Main Functions
     public void InitializeScene() {
-        ResetScore();
         gameActive = true;
-    }
-
-    public void UpdateNavMesh() {
-        
-    }
-
-    private void AddScore() {
-        score += 1;
-        scoreText.text = "Score: " + score;
-    }
-
-    private void ResetScore() {
-        score = 0;
-        scoreText.text = "Score: " + score;
-    }
-
-    public void EndScene() {
-        gameActive = false;
-        StopCoroutine(gameWavesProcess);
-
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if(enemies.Length > 0) {
-            foreach (GameObject enemy in enemies)
-            {
-                Destroy(enemy);
-            }            
-        }
 
     }
 
     IEnumerator GameWaves() {
-        while (gameActive) {
-            yield return new WaitForSeconds(3f);
+        yield return null;
+    }    
 
-            for (int i = 0; i < 10; i++)
-            {
-                GameObject newEnemy = Instantiate(basicEnemy, spawnPosition.position, spawnPosition.rotation);
-                newEnemy.GetComponent<Enemy>().target = targetPosition;
+    public void EndScene() {
 
-                yield return new WaitForSeconds(1f);                     
-            }
-        }
     }
+    #endregion
+
+    #region Sub Functions
+
+    #endregion
 
     #endregion
 }
