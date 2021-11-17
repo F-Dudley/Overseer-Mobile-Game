@@ -14,12 +14,23 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public static GameManager instance;
+    public ARPlacement placementScript;
     private NavMeshSurface navMeshSurface;
 
     [Header("Game References")]
+    private static bool enviromentInitialized;
     public bool gameActive;
 
     [Header("Game Events")]
+    public static UnityEvent EnviromentPlaced;
+    public static UnityEvent EnviromentReplaced;
+
+    [Space]
+
+    public static UnityEvent RoundStart;
+    public static UnityEvent RoundFinish;
+    public static UnityEvent RoundLost;
+
     private Coroutine gameWavesProcess;
 
     [Header("Enviroment References")]
@@ -30,6 +41,19 @@ public class GameManager : MonoBehaviour
     public GameObject basicEnemy;
     public GameObject mediumEnemy;
     public GameObject hardEnemy;
+
+    public static bool EnviromentInitialized
+    {
+        get {
+            return enviromentInitialized;
+        }
+        set {
+            enviromentInitialized = value;
+            if (value)  {
+                EnviromentPlaced.Invoke();
+            }
+        }
+    }
 
     public static GameObject GameEnviroment
     {
@@ -46,6 +70,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        placementScript = GetComponent<ARPlacement>();
         navMeshSurface = GetComponent<NavMeshSurface>();
     }
 
@@ -54,13 +79,16 @@ public class GameManager : MonoBehaviour
         gameEnviroment.SetActive(false);
     }
 
-    private void OnEnable() {
-
-    }
-
     private void Update()
     {
-
+        if (enviromentInitialized)
+        {
+            Debug.Log("Now in Game State");
+        }
+        else
+        {
+            placementScript.PlacementProcess(ref gameEnviroment);
+        }
     }
     #endregion
 

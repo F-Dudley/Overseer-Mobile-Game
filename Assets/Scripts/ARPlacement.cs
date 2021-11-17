@@ -14,7 +14,7 @@ public enum PlacementType
 
 public class ARPlacement : MonoBehaviour
 {
-    public PlacementType currentPlacementType = PlacementType.INITIAL;
+    private PlacementType currentPlacementType = PlacementType.INITIAL;
     public bool validPlacement = false;
 
     [Header("Enviroment References")]
@@ -22,6 +22,13 @@ public class ARPlacement : MonoBehaviour
     [SerializeField] private ARSessionOrigin sessionOrigin;
     [SerializeField] private ARRaycastManager raycastManager;
     [SerializeField] private Pose placementPose;
+
+    public PlacementType CurrentPlacementType
+    {
+        set {
+            currentPlacementType = value;
+        }
+    }
 
     #region Main Functions
     private void Start()
@@ -37,7 +44,7 @@ public class ARPlacement : MonoBehaviour
         currentPlacementType = PlacementType.INITIAL;
     }
 
-    public void PlacementProcess(ref Transform placementObject)
+    public void PlacementProcess(ref GameObject placementObject)
     {
         switch (currentPlacementType)
         {
@@ -46,7 +53,7 @@ public class ARPlacement : MonoBehaviour
                 break;
             
             case PlacementType.INITIAL:
-                VisualizePlacement(ref placementIndicator);
+                VisualizePlacement(placementIndicator);
                 if (validPlacement && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) 
                 {
                     SelectPlacementArea(ref placementObject);
@@ -54,14 +61,18 @@ public class ARPlacement : MonoBehaviour
                 break;
             
             case PlacementType.REPLACEMENT:
-                VisualizePlacement(ref placementObject);
+                VisualizePlacement(GameManager.GameEnviroment.transform);
+                if (validPlacement && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) 
+                {
+                    SelectPlacementArea(ref placementObject);
+                }
                 break;
         }
     }
     #endregion
 
     #region Placement Functions
-    private void VisualizePlacement(ref Transform objectTransform)
+    private void VisualizePlacement(Transform objectTransform)
     {
         Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector2(0.5f, 0.5f));
         List<ARRaycastHit> raycastHits = new List<ARRaycastHit>();
@@ -88,10 +99,16 @@ public class ARPlacement : MonoBehaviour
         _objectTransform.gameObject.SetActive(validPlacement);
     }
 
-    private void SelectPlacementArea(ref Transform _placementObject)
+    private void SelectPlacementArea(ref GameObject _placementObject)
     {
         currentPlacementType = PlacementType.IDLE;
-        if (!_placementObject.gameObject.activeSelf) _placementObject.GetComponent<TerrainAnimation>().PlayAnimation();
+
+        _placementObject.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
+        if (!_placementObject.activeSelf && currentPlacementType == PlacementType.INITIAL)
+        {
+            _placementObject.GetComponent<TerrainAnimation>().PlayAnimation();
+        }
+        GameManager.EnviromentInitialized = true;
     }
     #endregion
 
