@@ -19,15 +19,17 @@ public class GameManager : MonoBehaviour
     [Header("Game References")]
     public bool gameActive;
 
-    [Header("Game Enemies")]
-    public GameObject basicEnemy;
-
     [Header("Game Events")]
     private Coroutine gameWavesProcess;
 
     [Header("Enviroment References")]
     [SerializeField] private static GameObject gameEnviroment;
-    [SerializeField] private static GameEnviroment gameEnviromentScript;
+    [SerializeField] private static GameEnviroment gameEnviromentScript;    
+
+    [Header("Game Enemies")]
+    public GameObject basicEnemy;
+    public GameObject mediumEnemy;
+    public GameObject hardEnemy;
 
     public static GameObject GameEnviroment
     {
@@ -48,7 +50,8 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start() {
-        Instantiate(gameEnviroment, new Vector3(0, 0, 50), Quaternion.identity);
+        gameEnviroment = Instantiate<GameObject>(gameEnviroment, Vector3.zero, Quaternion.identity);
+        gameEnviroment.SetActive(false);
     }
 
     private void OnEnable() {
@@ -65,7 +68,7 @@ public class GameManager : MonoBehaviour
 
     #region Main Functions
     public void InitializeScene() {
-        gameActive = true;
+        gameActive = false;
 
     }
 

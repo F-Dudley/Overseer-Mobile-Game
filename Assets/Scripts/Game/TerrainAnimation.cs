@@ -14,9 +14,7 @@ public class TerrainAnimation : MonoBehaviour
     public Transform enviromentObjects;
 
     [Range(1, 10)]
-    public float animationTimeMin;
-    [Range(1, 10)]
-    public float animationTimeMax;
+    public float animationTime;
 
     public List<Material> materials = new List<Material>();
 
@@ -27,17 +25,48 @@ public class TerrainAnimation : MonoBehaviour
     }
 
     #region Unity Functions
-    private void Start()
+    private void Awake()
     {
-        if (animationTimeMin >= animationTimeMax) animationTimeMin--;
-
-        Vector3 initialEviromentScale = transform.localScale;
-
         SetupAnimation();
-        StartAnimation(initialEviromentScale);
     }
     #endregion
 
+    #region Main Animation
+    private void SetupAnimation()
+    {
+        gameObject.SetActive(false);
+
+        foreach (Transform child in enviromentObjects)
+        {
+            child.localScale = Vector3.zero;
+        }
+
+        GetChildMaterials();
+    }
+
+    public void PlayAnimation()
+    {
+        gameObject.SetActive(true);
+
+        Vector3 initialEviromentScale = transform.localScale;
+        this.gameObject.transform.localScale = Vector3.zero;
+
+        transform.DOScale(initialEviromentScale, animationTime)
+        .SetEase(Ease.InOutCubic)
+        .OnComplete(() => {
+
+            foreach (Transform enviromentArea in enviromentObjects)
+            {
+                enviromentArea.DOScale(Vector3.one, animationTime)
+                .SetEase(Ease.OutBack);
+            }
+
+            animationComplete = true;
+        });
+    }
+    #endregion
+
+    #region Opacity Changing
     private void GetChildMaterials()
     {
         Renderer[] childMaterials = transform.GetComponentsInChildren<Renderer>();
@@ -58,32 +87,5 @@ public class TerrainAnimation : MonoBehaviour
             mat.DOFade(_alpha, 1);
         }
     }
-
-    private void SetupAnimation()
-    {
-        this.gameObject.transform.localScale = Vector3.zero;
-
-        foreach (Transform child in enviromentObjects)
-        {
-            child.localScale = Vector3.zero;
-        }
-
-        GetChildMaterials();
-    }
-
-    private void StartAnimation(Vector3 _initialEnviromentScale)
-    {
-        transform.DOScale(_initialEnviromentScale, animationTimeMin)
-        .SetEase(Ease.OutQuad)
-        .OnComplete(() => {
-
-            foreach (Transform enviromentArea in enviromentObjects)
-            {
-                enviromentArea.DOScale(Vector3.one, Random.Range(animationTimeMin, animationTimeMax)).SetEase(Ease.OutBack);
-            }
-
-            animationComplete = true;
-            ChangeAlpha(0.5f);
-        });
-    }
+    #endregion 
 }
