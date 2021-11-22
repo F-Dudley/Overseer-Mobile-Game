@@ -66,6 +66,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static Vector3 GameTarget
+    {
+        get {
+            return gameEnviromentScript.targetLocation.position;
+        }
+    }
+
     #region Unity Functions
     private void Awake()
     {

@@ -597,6 +597,7 @@ MonoBehaviour:
   terrainArea: {fileID: 8161661684107249094}
   enviromentObjects: {fileID: 8161661684155509707}
   animationTime: 1
+  materials: []
 --- !u!114 &4350897842899114167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -611,6 +612,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 646893145182441590}
   targetLocation: {fileID: 4858809515868024627}
+  lowEnemies: []
+  mediumEnemies: []
+  hardEnemies: []
 --- !u!1 &8161661684155509706
 GameObject:
   m_ObjectHideFlags: 0
