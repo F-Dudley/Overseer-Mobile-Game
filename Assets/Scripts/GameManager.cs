@@ -10,7 +10,8 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     [Header("Main Variables")]
-    public int score;
+    private int health;
+    private int money;
 
     [HideInInspector]
     public static GameManager instance;
@@ -18,18 +19,14 @@ public class GameManager : MonoBehaviour
     private NavMeshSurface navMeshSurface;
 
     [Header("Game References")]
-    private static bool enviromentInitialized;
     public bool gameActive;
 
     [Header("Game Events")]
+    public static UnityEvent EnviromentStartPlacement;    
     public static UnityEvent EnviromentPlaced;
-    public static UnityEvent EnviromentReplaced;
-
-    [Space]
 
     public static UnityEvent RoundStart;
     public static UnityEvent RoundFinish;
-    public static UnityEvent RoundLost;
 
     private Coroutine gameWavesProcess;
 
@@ -41,19 +38,6 @@ public class GameManager : MonoBehaviour
     public GameObject basicEnemy;
     public GameObject mediumEnemy;
     public GameObject hardEnemy;
-
-    public static bool EnviromentInitialized
-    {
-        get {
-            return enviromentInitialized;
-        }
-        set {
-            enviromentInitialized = value;
-            if (value)  {
-                EnviromentPlaced.Invoke();
-            }
-        }
-    }
 
     public static GameObject GameEnviroment
     {
@@ -73,6 +57,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public int Money
+    {
+        set
+        {
+            money = value;
+        }
+    }
+
     #region Unity Functions
     private void Awake()
     {
@@ -81,20 +73,22 @@ public class GameManager : MonoBehaviour
         navMeshSurface = GetComponent<NavMeshSurface>();
     }
 
-    private void Start() {
+    private void Start()
+    {
         gameEnviroment = Instantiate<GameObject>(gameEnviroment, Vector3.zero, Quaternion.identity);
+        gameEnviroment.transform.localScale = gameEnviroment.transform.localScale * 0.2f;
         gameEnviroment.SetActive(false);
     }
 
     private void Update()
     {
-        if (enviromentInitialized)
+        if (placementScript.EnviromentPlaced)
         {
             Debug.Log("Now in Game State");
         }
         else
         {
-            placementScript.PlacementProcess(ref gameEnviroment);
+            placementScript.PlacementProcess();
         }
     }
     #endregion

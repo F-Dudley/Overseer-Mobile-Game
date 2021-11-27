@@ -7,21 +7,37 @@ using UnityEngine.Experimental.XR;
 
 public enum PlacementType
 {
-    IDLE,
     INITIAL,
     REPLACEMENT
 }
 
 public class ARPlacement : MonoBehaviour
 {
-    private PlacementType currentPlacementType = PlacementType.INITIAL;
-    public bool validPlacement = false;
+    [Header("Main Placement Variables")]
+    [SerializeField] private PlacementType currentPlacementType = PlacementType.INITIAL;
+    private bool enviromentPlaced = false;
+    private bool validPlacement = false;
 
-    [Header("Enviroment References")]
+    [Header("Scene References")]
+    public Camera mainCam;
     public Transform placementIndicator;
     [SerializeField] private ARSessionOrigin sessionOrigin;
     [SerializeField] private ARRaycastManager raycastManager;
     [SerializeField] private Pose placementPose;
+
+    public bool EnviromentPlaced
+    {
+        set {
+            enviromentPlaced = value;
+            if (value)
+            {
+                GameManager.EnviromentPlaced.Invoke();
+            }
+        }
+        get {
+            return enviromentPlaced;
+        }
+    }
 
     public PlacementType CurrentPlacementType
     {
@@ -44,19 +60,18 @@ public class ARPlacement : MonoBehaviour
         currentPlacementType = PlacementType.INITIAL;
     }
 
-    public void PlacementProcess(ref GameObject placementObject)
+    public void PlacementProcess()
     {
         switch (currentPlacementType)
         {
             default:
-            case PlacementType.IDLE:
                 break;
             
             case PlacementType.INITIAL:
                 VisualizePlacement(placementIndicator);
                 if (validPlacement && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) 
                 {
-                    SelectPlacementArea(ref placementObject);
+                    SelectPlacementArea();
                 }
                 break;
             
@@ -64,7 +79,7 @@ public class ARPlacement : MonoBehaviour
                 VisualizePlacement(GameManager.GameEnviroment.transform);
                 if (validPlacement && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) 
                 {
-                    SelectPlacementArea(ref placementObject);
+                    SelectPlacementArea();
                 }
                 break;
         }
@@ -74,7 +89,7 @@ public class ARPlacement : MonoBehaviour
     #region Placement Functions
     private void VisualizePlacement(Transform objectTransform)
     {
-        Vector3 screenCenter = Camera.current.ViewportToScreenPoint(new Vector2(0.5f, 0.5f));
+        Vector3 screenCenter = mainCam.ViewportToScreenPoint(new Vector2(0.5f, 0.5f));
         List<ARRaycastHit> raycastHits = new List<ARRaycastHit>();
 
         raycastManager.Raycast(screenCenter, raycastHits, TrackableType.Planes);
@@ -82,9 +97,8 @@ public class ARPlacement : MonoBehaviour
 
         if (validPlacement)
         {
-            placementPose = raycastHits[0].pose;
-            placementPose.rotation = Quaternion.LookRotation(Camera.current.transform.forward).normalized;
-            placementPose.rotation.y = 0;
+            placementPose.position = raycastHits[0].pose.position;
+            placementPose.rotation = Quaternion.LookRotation(new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z).normalized);
         }
 
         UpdateIndicator(ref objectTransform);
@@ -99,16 +113,14 @@ public class ARPlacement : MonoBehaviour
         _objectTransform.gameObject.SetActive(validPlacement);
     }
 
-    private void SelectPlacementArea(ref GameObject _placementObject)
+    private void SelectPlacementArea()
     {
-        currentPlacementType = PlacementType.IDLE;
-
-        _placementObject.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
-        if (!_placementObject.activeSelf && currentPlacementType == PlacementType.INITIAL)
+        GameManager.GameEnviroment.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
+        if (!GameManager.GameEnviroment.activeSelf && currentPlacementType == PlacementType.INITIAL)
         {
-            _placementObject.GetComponent<TerrainAnimation>().PlayAnimation();
+            GameManager.GameEnviroment.GetComponent<TerrainAnimation>().PlayAnimation();        
         }
-        GameManager.EnviromentInitialized = true;
+        EnviromentPlaced = true;
     }
     #endregion
 
