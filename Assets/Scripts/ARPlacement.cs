@@ -8,7 +8,8 @@ using UnityEngine.Experimental.XR;
 public enum PlacementType
 {
     INITIAL,
-    REPLACEMENT
+    REPLACEMENT,
+    PLACED
 }
 
 public class ARPlacement : MonoBehaviour
@@ -65,6 +66,7 @@ public class ARPlacement : MonoBehaviour
         switch (currentPlacementType)
         {
             default:
+            case PlacementType.PLACED:
                 break;
             
             case PlacementType.INITIAL:
@@ -101,10 +103,10 @@ public class ARPlacement : MonoBehaviour
             placementPose.rotation = Quaternion.LookRotation(new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z).normalized);
         }
 
-        UpdateIndicator(ref objectTransform);
+        UpdateIndicator(objectTransform);
     }
 
-    private void UpdateIndicator(ref Transform _objectTransform)
+    private void UpdateIndicator(Transform _objectTransform)
     {
         if (validPlacement)
         {
@@ -113,7 +115,7 @@ public class ARPlacement : MonoBehaviour
         _objectTransform.gameObject.SetActive(validPlacement);
     }
 
-    private void SelectPlacementArea()
+    public void SelectPlacementArea()
     {
         GameManager.GameEnviroment.transform.SetPositionAndRotation(placementPose.position, placementPose.rotation);
         if (!GameManager.GameEnviroment.activeSelf && currentPlacementType == PlacementType.INITIAL)
@@ -121,6 +123,7 @@ public class ARPlacement : MonoBehaviour
             GameManager.GameEnviroment.GetComponent<TerrainAnimation>().PlayAnimation();        
         }
         EnviromentPlaced = true;
+        currentPlacementType = PlacementType.PLACED;
     }
     #endregion
 

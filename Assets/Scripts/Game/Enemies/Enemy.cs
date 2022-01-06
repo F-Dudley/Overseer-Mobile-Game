@@ -19,28 +19,43 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float movementSpeed;
     [SerializeField] protected float rotationSpeed;
 
+    [SerializeField] protected bool inAttackingPosition;
+
     [Space]
 
     [SerializeField] protected float damage;
     [SerializeField] protected float attackRange;
 
+    [Header("Enemy Parts")]
+    public Transform bodyTransform;
+    public Transform weaponTransform;
+
+    [Header("Components")]
     protected NavMeshAgent agent;
 
     #region Base Functions
     protected void Init()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.SetDestination(GameManager.GameTarget);
     }
 
-    protected virtual void AttackTarget()
-    {
+    protected abstract void MoveState();
+    protected abstract void AttackState();
 
-    }
+    protected abstract void AttackTarget();
 
     protected virtual void UseAbility()
     {
 
     }
+
+    protected abstract void StartMovementAnimation();
+    protected abstract void StartAttackingAnimation();
+
+    protected void StopMovementAnimation()
+    {
+
+    }
+
     #endregion
 }

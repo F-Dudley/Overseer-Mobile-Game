@@ -19,10 +19,10 @@ public class GameplayManager : MonoBehaviour
 
     private IEnumerator StartRound()
     {
-        GameManager.RoundStart.Invoke();
+        
 
         yield return new WaitForSeconds(5);
 
-        GameManager.RoundFinish.Invoke();
+        
     }
 }

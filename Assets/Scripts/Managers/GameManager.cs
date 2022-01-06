@@ -9,12 +9,9 @@ using TMPro;
 [System.Serializable]
 public class GameManager : MonoBehaviour
 {
-    [Header("Main Variables")]
-    private int health;
-    private int money;
-
     [HideInInspector]
     public static GameManager instance;
+
     public ARPlacement placementScript;
     private NavMeshSurface navMeshSurface;
 
@@ -25,19 +22,11 @@ public class GameManager : MonoBehaviour
     public static UnityEvent EnviromentStartPlacement;    
     public static UnityEvent EnviromentPlaced;
 
-    public static UnityEvent RoundStart;
-    public static UnityEvent RoundFinish;
-
     private Coroutine gameWavesProcess;
 
     [Header("Enviroment References")]
     [SerializeField] private static GameObject gameEnviroment;
-    [SerializeField] private static GameEnviroment gameEnviromentScript;    
-
-    [Header("Game Enemies")]
-    public GameObject basicEnemy;
-    public GameObject mediumEnemy;
-    public GameObject hardEnemy;
+    [SerializeField] private static GameEnviroment gameEnviromentScript;
 
     public static GameObject GameEnviroment
     {
@@ -50,18 +39,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static Vector3 GameTarget
+    public static Vector3 AssaultTarget
     {
         get {
-            return gameEnviromentScript.targetLocation.position;
+            return gameEnviromentScript.assaultTarget.position;
         }
     }
 
-    public int Money
+    public static Vector3 ArtilleryTarget
     {
-        set
-        {
-            money = value;
+        get {
+            return gameEnviromentScript.artilleryTarget.position;
+        }
+    }
+
+    public static Vector3 SupportTarget
+    {
+        get {
+            return gameEnviromentScript.supportTarget.position;
         }
     }
 
@@ -76,7 +71,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         gameEnviroment = Instantiate<GameObject>(gameEnviroment, Vector3.zero, Quaternion.identity);
-        gameEnviroment.transform.localScale = gameEnviroment.transform.localScale * 0.2f;
+        gameEnviroment.transform.localScale *= 0.05f;
         gameEnviroment.SetActive(false);
     }
 
@@ -96,16 +91,19 @@ public class GameManager : MonoBehaviour
     #region Game Functions
 
     #region Main Functions
-    public void InitializeScene() {
+    public void InitializeScene()
+    {
         gameActive = false;
 
     }
 
-    IEnumerator GameWaves() {
+    IEnumerator GameWaves()
+    {
         yield return null;
     }    
 
-    public void EndScene() {
+    public void EndScene()
+    {
 
     }
     #endregion

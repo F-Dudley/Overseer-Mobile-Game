@@ -13,10 +13,18 @@ public class GameEnviroment : MonoBehaviour
 {
     [Header("Enviroment Points")]
     public Transform spawnPoint;
-    public Transform targetLocation;
+
+    [Space]
+
+    public Transform assaultTarget;
+    public Transform artilleryTarget;
+    public Transform supportTarget;
+
+    [Header("Enviroment Containers")]
+    public Transform enemyContainer;
 
     [Header("Enemies")]
-    public EnviromentEnemy[] lowEnemies;
-    public EnviromentEnemy[] mediumEnemies;
-    public EnviromentEnemy[] hardEnemies;
+    public EnviromentEnemy[] assultEnemies;
+    public EnviromentEnemy[] artilleryEnemies;
+    public EnviromentEnemy[] supportEnemies;
 }
