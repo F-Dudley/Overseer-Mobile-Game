@@ -15,14 +15,12 @@ public class GameManager : MonoBehaviour
     public ARPlacement placementScript;
     private NavMeshSurface navMeshSurface;
 
-    [Header("Game References")]
-    public bool gameActive;
-
     [Header("Game Events")]
     public static UnityEvent EnviromentStartPlacement;    
     public static UnityEvent EnviromentPlaced;
 
-    private Coroutine gameWavesProcess;
+    public static UnityEvent GameWaveStarted;
+    public static UnityEvent GameWaveEnded;
 
     [Header("Enviroment References")]
     [SerializeField] private static GameObject gameEnviroment;
@@ -86,31 +84,5 @@ public class GameManager : MonoBehaviour
             placementScript.PlacementProcess();
         }
     }
-    #endregion
-
-    #region Game Functions
-
-    #region Main Functions
-    public void InitializeScene()
-    {
-        gameActive = false;
-
-    }
-
-    IEnumerator GameWaves()
-    {
-        yield return null;
-    }    
-
-    public void EndScene()
-    {
-
-    }
-    #endregion
-
-    #region Sub Functions
-
-    #endregion
-
     #endregion
 }

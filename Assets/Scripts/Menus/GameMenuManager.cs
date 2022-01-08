@@ -18,17 +18,32 @@ public class GameMenuManager : MonoBehaviour
     [SerializeField] private GameObject placementUI;
     [SerializeField] private GameObject gameUI;
 
+    [Header("Game UI Sub-Elements")]
+    [SerializeField] private GameObject shopUI;
+    [SerializeField] private GameObject inventoryUI;
+
     #region Unity Functions
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void OnEnable()
     {
         GameManager.EnviromentPlaced.AddListener(OpenGameUI);
         GameManager.EnviromentStartPlacement.AddListener(OpenPlacementUI);
+
+        GameManager.GameWaveStarted.AddListener(ShowPlayingUI);
+        GameManager.GameWaveEnded.AddListener(ReturnToGameUI);
     }
 
     private void OnDisable()
     {
         GameManager.EnviromentPlaced.RemoveListener(OpenGameUI);
         GameManager.EnviromentStartPlacement.RemoveListener(OpenPlacementUI);
+
+        GameManager.GameWaveStarted.RemoveListener(ShowPlayingUI);
+        GameManager.GameWaveEnded.RemoveListener(ReturnToGameUI);
     }
     #endregion
 
@@ -58,6 +73,18 @@ public class GameMenuManager : MonoBehaviour
     {
         gameUI.SetActive(true);
         placementUI.SetActive(false);
+    }
+
+    public void ShowPlayingUI()
+    {
+        shopUI.SetActive(false);
+        inventoryUI.SetActive(false);
+    }
+
+    public void ReturnToGameUI()
+    {
+        shopUI.SetActive(true);
+        inventoryUI.SetActive(true);
     }
     #endregion
 }
