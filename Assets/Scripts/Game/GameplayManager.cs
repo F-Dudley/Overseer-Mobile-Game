@@ -9,6 +9,11 @@ public class GameplayManager : MonoBehaviour
     private Coroutine gameRound;
     private bool roundActive;
 
+    [Header("Player Shooting")]
+    [SerializeField] private LayerMask playerMask;
+    [SerializeField] private bool shootingReady;
+    [SerializeField] private int shootDamage = 100;
+
     [Header("Game References")]
     [SerializeField] private GameEnviroment gameEnviromentScript;
     [SerializeField] private Camera sceneCamera;
@@ -24,7 +29,7 @@ public class GameplayManager : MonoBehaviour
     {
         if (roundActive)
         {
-            PlayerShoot();
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) PlayerShoot();
         }
     }
     #endregion
@@ -56,7 +61,27 @@ public class GameplayManager : MonoBehaviour
     #region Player Interaction Functionality
     private void PlayerShoot()
     {
-        
+        if (shootingReady)
+        {
+            shootingReady = false;
+            Vector3 screenCenter = sceneCamera.ViewportToScreenPoint(new Vector2(0.5f, 0.5f));
+
+            if (Physics.Raycast(screenCenter, sceneCamera.transform.forward, out RaycastHit hitInfo, 200f, playerMask, QueryTriggerInteraction.Collide))
+            {
+                if (hitInfo.collider.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+                {
+                    enemy.TakeDamage(shootDamage);
+                }
+            }
+
+            StartCoroutine(ShootCoolDown());
+        }
+    }
+
+    private IEnumerator ShootCoolDown()
+    {
+        yield return new WaitForSeconds(5f);
+        shootingReady = true;
     }
     #endregion
 }

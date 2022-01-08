@@ -27,8 +27,8 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float attackRange;
 
     [Header("Enemy Parts")]
-    public Transform bodyTransform;
-    public Transform weaponTransform;
+    [SerializeField] private Transform bodyTransform;
+    [SerializeField] private Transform weaponTransform;
 
     [Header("Components")]
     protected NavMeshAgent agent;
@@ -57,5 +57,17 @@ public abstract class Enemy : MonoBehaviour
 
     }
 
+    #endregion
+
+    #region Interaction Functions
+    public void TakeDamage(int _damage)
+    {
+        health -= _damage;
+    }
+
+    public void Heal(int _regainedHealth)
+    {
+        health += _regainedHealth;
+    }
     #endregion
 }

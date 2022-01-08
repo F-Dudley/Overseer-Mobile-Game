@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d359167a8a42142b43b80debd8e928, type: 3}
   m_Name: TEST ENVIROMENT
   m_EditorClassIdentifier: 
-  environmentName: 
-  environmentDescription: 
+  environmentName: This is an Example Enviroment
+  environmentDescription: This is a Development Example Don't Click
   environmentPicture: {fileID: 0}
   environmentPrefab: {fileID: 0}
