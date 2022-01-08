@@ -37,7 +37,7 @@ public class GameplayManager : MonoBehaviour
     #region Wave Functions
     public void StartGameRound()
     {
-        GameManager.GameWaveStarted.Invoke();
+        GameManager.InvokeGameWaveStarted();
         gameRound = StartCoroutine(GameRound());
     }
 
@@ -53,7 +53,7 @@ public class GameplayManager : MonoBehaviour
 
         yield return new WaitForSeconds(10f);
 
-        GameManager.GameWaveEnded.Invoke();
+        GameManager.InvokeGameWaveEnded();
         roundActive = false;
     }
     #endregion

@@ -27,8 +27,8 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float attackRange;
 
     [Header("Enemy Parts")]
-    [SerializeField] private Transform bodyTransform;
-    [SerializeField] private Transform weaponTransform;
+    [SerializeField] protected Transform bodyTransform;
+    [SerializeField] protected Transform weaponTransform;
 
     [Header("Components")]
     protected NavMeshAgent agent;

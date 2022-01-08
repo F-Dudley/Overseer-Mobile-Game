@@ -32,7 +32,7 @@ public class ARPlacement : MonoBehaviour
             enviromentPlaced = value;
             if (value)
             {
-                GameManager.EnviromentPlaced.Invoke();
+                GameManager.InvokeEnviromentPlaced();
             }
         }
         get {
@@ -59,6 +59,7 @@ public class ARPlacement : MonoBehaviour
         }
 
         currentPlacementType = PlacementType.INITIAL;
+        GameManager.InvokeEnviromentStartedPlacement();
     }
 
     public void PlacementProcess()
@@ -71,18 +72,10 @@ public class ARPlacement : MonoBehaviour
             
             case PlacementType.INITIAL:
                 VisualizePlacement(placementIndicator);
-                if (validPlacement && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) 
-                {
-                    SelectPlacementArea();
-                }
                 break;
             
             case PlacementType.REPLACEMENT:
                 VisualizePlacement(GameManager.GameEnviroment.transform);
-                if (validPlacement && Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) 
-                {
-                    SelectPlacementArea();
-                }
                 break;
         }
     }

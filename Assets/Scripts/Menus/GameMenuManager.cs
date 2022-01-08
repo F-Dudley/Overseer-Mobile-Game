@@ -28,26 +28,36 @@ public class GameMenuManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        //EnableUIEvents();
+    }
+
     private void OnEnable()
     {
-        GameManager.EnviromentPlaced.AddListener(OpenGameUI);
-        GameManager.EnviromentStartPlacement.AddListener(OpenPlacementUI);
-
-        GameManager.GameWaveStarted.AddListener(ShowPlayingUI);
-        GameManager.GameWaveEnded.AddListener(ReturnToGameUI);
+        EnableUIEvents();
     }
 
     private void OnDisable()
     {
-        GameManager.EnviromentPlaced.RemoveListener(OpenGameUI);
-        GameManager.EnviromentStartPlacement.RemoveListener(OpenPlacementUI);
+        GameManager.EnviromentPlaced -= OpenGameUI;
+        GameManager.EnviromentStartPlacement -= OpenPlacementUI;
 
-        GameManager.GameWaveStarted.RemoveListener(ShowPlayingUI);
-        GameManager.GameWaveEnded.RemoveListener(ReturnToGameUI);
+        GameManager.GameWaveStarted -= ShowPlayingUI;
+        GameManager.GameWaveEnded -= ReturnToGameUI;
     }
     #endregion
 
     #region UI Change Functions
+    private void EnableUIEvents()
+    {
+        GameManager.EnviromentPlaced += OpenGameUI;
+        GameManager.EnviromentStartPlacement += OpenPlacementUI;
+
+        GameManager.GameWaveStarted += ShowPlayingUI;
+        GameManager.GameWaveEnded += ReturnToGameUI;
+    }
+
     public void SetHealthUI(float _currentHealth, float _maxHealth)
     {
         healthImage.fillAmount = _currentHealth / _maxHealth;

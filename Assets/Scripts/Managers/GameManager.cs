@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,12 +16,11 @@ public class GameManager : MonoBehaviour
     public ARPlacement placementScript;
     private NavMeshSurface navMeshSurface;
 
-    [Header("Game Events")]
-    public static UnityEvent EnviromentStartPlacement;    
-    public static UnityEvent EnviromentPlaced;
+    public static event Action EnviromentStartPlacement;    
+    public static event Action EnviromentPlaced;
 
-    public static UnityEvent GameWaveStarted;
-    public static UnityEvent GameWaveEnded;
+    public static event Action GameWaveStarted;
+    public static event Action GameWaveEnded;
 
     [Header("Enviroment References")]
     [SerializeField] private static GameObject gameEnviroment;
@@ -71,18 +71,28 @@ public class GameManager : MonoBehaviour
         gameEnviroment = Instantiate<GameObject>(gameEnviroment, Vector3.zero, Quaternion.identity);
         gameEnviroment.transform.localScale *= 0.05f;
         gameEnviroment.SetActive(false);
+
+        EnviromentPlaced += EnviromentPlacedTest;
     }
 
     private void Update()
     {
-        if (placementScript.EnviromentPlaced)
-        {
-            Debug.Log("Now in Game State");
-        }
-        else
+        if (!placementScript.EnviromentPlaced)
         {
             placementScript.PlacementProcess();
         }
     }
+    #endregion
+
+    #region Events
+    private void EnviromentPlacedTest()
+    {
+        Debug.Log("Enviroment Placed Invoked");
+    }
+
+    public static void InvokeEnviromentStartedPlacement() => EnviromentStartPlacement.Invoke();
+    public static void InvokeEnviromentPlaced() => EnviromentPlaced.Invoke();
+    public static void InvokeGameWaveStarted() => GameWaveStarted.Invoke();
+    public static void InvokeGameWaveEnded() => GameWaveEnded.Invoke();
     #endregion
 }
