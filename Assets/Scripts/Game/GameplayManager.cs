@@ -6,6 +6,38 @@ public class GameplayManager : MonoBehaviour
 {
     public static GameplayManager instance;
 
+    [Header("Gameplay Variables")]
+    private int baseHealth = 20;
+    [SerializeField] private int maxBaseHealth = 20;
+    private int shieldHealth = 100;
+    [SerializeField] private int maxShieldHealth = 20;
+
+    private int resourcesAmount = 0;
+
+    public int BaseHealth
+    {
+        get {
+            return baseHealth;
+        }
+        set {
+            baseHealth = value;
+            baseHealth = Mathf.Clamp(baseHealth, 0, maxBaseHealth);
+            GameMenuManager.instance.SetHealthUI(baseHealth, maxBaseHealth);
+        }
+    }
+
+    public int ShieldHealth
+    {
+        get {
+            return shieldHealth;
+        }
+        set {
+            shieldHealth = value;
+            shieldHealth = Mathf.Clamp(shieldHealth, 0, maxShieldHealth);
+            GameMenuManager.instance.SetShieldUI(shieldHealth, maxShieldHealth);
+        }
+    }
+
     [Header("Round Variables")]
     private Coroutine gameRound;
     private bool roundActive;
@@ -21,9 +53,14 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private bool shootingReady;
     [SerializeField] private int shootDamage = 100;
 
+    private WaitForSeconds shootingCooldown = new WaitForSeconds(5f);
+
     [Header("Game References")]
     [SerializeField] private GameEnviroment gameEnviromentScript;
     [SerializeField] private Camera sceneCamera;
+
+    [Header("Wave Helpers")]
+    private WaitForSeconds spawnWaiter = new WaitForSeconds(1f);
 
     #region Unity Functions
     private void Awake()
@@ -59,8 +96,9 @@ public class GameplayManager : MonoBehaviour
 
         for (int i = 0; i < 5; i++)
         {
-            Debug.Log("Taking Enemy From Pool");
-            yield return new WaitForSeconds(1f);
+            // assaultPool.TakeItem(GameManager.AssaultTarget, Quaternion.identity);
+            Debug.Log("Taking Object From Pool");
+            yield return spawnWaiter;
         }
 
         yield return new WaitForSeconds(10f);
@@ -92,8 +130,22 @@ public class GameplayManager : MonoBehaviour
 
     private IEnumerator ShootCoolDown()
     {
-        yield return new WaitForSeconds(5f);
+        yield return shootingCooldown;
         shootingReady = true;
+    }
+    #endregion
+
+    #region Unit Base Functionality
+    public void DamageBase(int _damageAmount)
+    {
+        if (shieldHealth > 0)
+        {
+            shieldHealth -= _damageAmount;
+        }
+        else
+        {
+            baseHealth -= _damageAmount;
+        }
     }
     #endregion
 }

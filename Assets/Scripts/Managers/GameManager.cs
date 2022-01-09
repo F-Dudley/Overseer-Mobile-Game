@@ -96,6 +96,16 @@ public class GameManager : MonoBehaviour
         EnviromentPlaced += EnviromentPlacedTest;
     }
 
+    private void OnEnable()
+    {
+        EnviromentPlaced += RebakeNavmesh;
+    }
+
+    private void OnDisable()
+    {
+        EnviromentPlaced -= RebakeNavmesh;
+    }
+
     private void Update()
     {
         if (!placementScript.EnviromentPlaced)
@@ -115,5 +125,13 @@ public class GameManager : MonoBehaviour
     public static void InvokeEnviromentPlaced() => EnviromentPlaced.Invoke();
     public static void InvokeGameWaveStarted() => GameWaveStarted.Invoke();
     public static void InvokeGameWaveEnded() => GameWaveEnded.Invoke();
+    #endregion
+
+    #region Navmesh
+    private void RebakeNavmesh()
+    {
+        Debug.Log("Rebaking Navmesh");
+        navMeshSurface.BuildNavMesh();
+    }
     #endregion
 }
