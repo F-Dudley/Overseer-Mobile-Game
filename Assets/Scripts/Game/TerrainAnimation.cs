@@ -58,6 +58,8 @@ public class TerrainAnimation : MonoBehaviour
             }
 
             animationComplete = true;
+
+            GameManager.instance.RebakeNavmesh();
         });
     }
     #endregion

@@ -10,15 +10,15 @@ GameObject:
   m_Component:
   - component: {fileID: 4749095679691534391}
   - component: {fileID: 4749095679691534390}
-  - component: {fileID: 4749095679691534385}
   - component: {fileID: 573345205312441853}
+  - component: {fileID: 4749095679691534385}
   m_Layer: 8
   m_Name: Grunt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4749095679691534391
 Transform:
   m_ObjectHideFlags: 0
@@ -56,6 +56,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 3
+--- !u!136 &573345205312441853
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4749095679691534384}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.75
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4749095679691534385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,20 +91,6 @@ MonoBehaviour:
   attackRange: 5
   bodyTransform: {fileID: 8713988832019018248}
   weaponTransform: {fileID: 7295502336508846994}
---- !u!136 &573345205312441853
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4749095679691534384}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1.75
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1001 &1519229496614061836
 PrefabInstance:
   m_ObjectHideFlags: 0

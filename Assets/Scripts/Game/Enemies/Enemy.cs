@@ -20,6 +20,7 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected float movementSpeed;
     [SerializeField] protected float rotationSpeed;
 
+    public Vector3 targetLocation;
     [SerializeField] protected bool inAttackingPosition;
 
     [Space]
@@ -35,6 +36,11 @@ public abstract class Enemy : MonoBehaviour
     protected NavMeshAgent agent;
 
     #region Unity Functions
+    protected virtual void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
+
     protected virtual void OnEnable()
     {
         StartMovementAnimation();
@@ -47,11 +53,6 @@ public abstract class Enemy : MonoBehaviour
     #endregion
 
     #region Base Functions
-    protected void Init()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
-
     protected abstract void MoveState();
     protected abstract void AttackState();
 
@@ -76,7 +77,7 @@ public abstract class Enemy : MonoBehaviour
     public void TakeDamage(int _damage)
     {
         health -= _damage;
-        if (health <= 0) ReturnToPool();
+        if (health <= 0) gameObject.SetActive(false);
     }
 
     public void Heal(int _regainedHealth)

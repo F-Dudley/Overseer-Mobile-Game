@@ -6,20 +6,22 @@ using DG.Tweening;
 public class Grunt : Enemy
 {
     #region Unity Functions
-    protected void Start()
+    protected override void Start()
     {
-        base.Init();
+        base.Start();
+        targetLocation = GameManager.AssaultTarget;
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        agent.SetDestination(GameManager.AssaultTarget);
+        agent.SetDestination(targetLocation);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+        ReturnToPool();
     }
 
     protected void Update()
@@ -83,8 +85,10 @@ public class Grunt : Enemy
 
     public override void ReturnToPool()
     {
+        GameplayManager.instance.ResourcesAmount += 1;
+
         gameObject.SetActive(false);
-        GameplayManager.instance.assaultPool.ReturnItem(this.gameObject);
+        GameplayManager.instance.enemyPool.ReturnAssaultItem(this.gameObject);
     }
     #endregion
 }

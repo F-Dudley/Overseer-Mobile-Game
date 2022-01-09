@@ -73,19 +73,16 @@ public class GameplayManager : MonoBehaviour
 
     [SerializeField] private int maxPoolSize = 100;
 
-    [SerializeField] public ObjectPool assaultPool;
-    [SerializeField] public ObjectPool artilleryPool;
-    [SerializeField] public ObjectPool supportPool;
+    [SerializeField] public ObjectPool enemyPool;
 
     [Header("Player Shooting")]
     [SerializeField] private LayerMask enemyMask;
     [SerializeField] private bool shootingReady;
     [SerializeField] private int shootDamage = 100;
 
-    private WaitForSeconds shootingCooldown = new WaitForSeconds(5f);
+    private WaitForSeconds shootingCooldown = new WaitForSeconds(3f);
 
     [Header("Game References")]
-    [SerializeField] private GameEnviroment gameEnviromentScript;
     [SerializeField] private Camera sceneCamera;
 
     [Header("Wave Helpers")]
@@ -99,7 +96,6 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
-        gameEnviromentScript = GameManager.GameEnviroment.GetComponent<GameEnviroment>();
         sceneCamera = Camera.main;
     }
 
@@ -125,8 +121,9 @@ public class GameplayManager : MonoBehaviour
 
         for (int i = 0; i < 5; i++)
         {
-            assaultPool.TakeItem(GameManager.SpawnPoint);
+            enemyPool.TakeAssaultItem();
             Debug.Log("Taking Object From Pool");
+            
             yield return spawnWaiter;
         }
 
@@ -149,6 +146,7 @@ public class GameplayManager : MonoBehaviour
             {
                 if (hitInfo.collider.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {
+                    Debug.Log("Hit Enemy");
                     enemy.TakeDamage(shootDamage);
                 }
             }

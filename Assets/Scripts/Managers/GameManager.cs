@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     public static event UnityAction GameWaveStarted;
     public static event UnityAction GameWaveEnded;
 
+    public static float SpawnedInItemsScalar = 0.05f;
+
     [Header("Enviroment References")]
     [SerializeField] private static GameObject gameEnviroment;
     [SerializeField] private static GameEnviroment gameEnviromentScript;
@@ -85,25 +87,20 @@ public class GameManager : MonoBehaviour
         instance = this;
         placementScript = GetComponent<ARPlacement>();
         navMeshSurface = GetComponent<NavMeshSurface>();
-    }
 
-    private void Start()
-    {
         gameEnviroment = Instantiate<GameObject>(gameEnviroment, Vector3.zero, Quaternion.identity);
-        gameEnviroment.transform.localScale *= 0.05f;
+        gameEnviroment.transform.localScale *= SpawnedInItemsScalar;
         gameEnviroment.SetActive(false);
-
-        EnviromentPlaced += EnviromentPlacedTest;
     }
 
     private void OnEnable()
     {
-        EnviromentPlaced += RebakeNavmesh;
+
     }
 
     private void OnDisable()
     {
-        EnviromentPlaced -= RebakeNavmesh;
+
     }
 
     private void Update()
@@ -116,11 +113,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Events
-    private void EnviromentPlacedTest()
-    {
-        Debug.Log("Enviroment Placed Invoked");
-    }
-
     public static void InvokeEnviromentStartedPlacement() => EnviromentStartPlacement.Invoke();
     public static void InvokeEnviromentPlaced() => EnviromentPlaced.Invoke();
     public static void InvokeGameWaveStarted() => GameWaveStarted.Invoke();
@@ -128,7 +120,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Navmesh
-    private void RebakeNavmesh()
+    public void RebakeNavmesh()
     {
         Debug.Log("Rebaking Navmesh");
         navMeshSurface.BuildNavMesh();

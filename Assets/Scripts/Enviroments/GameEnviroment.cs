@@ -29,8 +29,8 @@ public class GameEnviroment : MonoBehaviour
     public EnviromentEnemy[] supportEnemies;
 
     #region Gameplay Functions
-    public GameObject GetRandomAssultEnemy() => assultEnemies[Random.Range(0, assultEnemies.Length - 1)].enemyPrefab;
+    public GameObject GetRandomAssaultEnemy() => assultEnemies[Random.Range(0, assultEnemies.Length - 1)].enemyPrefab;
     public GameObject GetRandomArtilleryEnemy() => artilleryEnemies[Random.Range(0, artilleryEnemies.Length - 1)].enemyPrefab;
-    public GameObject GetRandomSupportEnemy() => supportEnemies[Random.Range(0, supportEnemies.Length -1)].enemyPrefab;
+    public GameObject GetRandomSupportEnemy() => supportEnemies[Random.Range(0, supportEnemies.Length - 1)].enemyPrefab;
     #endregion
 }
