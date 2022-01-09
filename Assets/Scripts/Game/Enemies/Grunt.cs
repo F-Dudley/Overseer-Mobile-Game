@@ -9,9 +9,17 @@ public class Grunt : Enemy
     protected void Start()
     {
         base.Init();
+    }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
         agent.SetDestination(GameManager.AssaultTarget);
-        StartMovementAnimation();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
     }
 
     protected void Update()
@@ -48,6 +56,7 @@ public class Grunt : Enemy
         {
             agent.isStopped = true;
             currentState = EnemyState.Attacking;
+            transform.DOKill(false);
             StartAttackingAnimation();
         }
     }
@@ -67,8 +76,15 @@ public class Grunt : Enemy
 
     protected override async void StartAttackingAnimation()
     {
+        await bodyTransform.DORotate(Vector3.zero, 0.5f).AsyncWaitForCompletion();
         await weaponTransform.DORotate(new Vector3(90, 0, 0), 1.5f).AsyncWaitForCompletion();
         inAttackingPosition = true;
+    }
+
+    public override void ReturnToPool()
+    {
+        gameObject.SetActive(false);
+        GameplayManager.instance.assaultPool.ReturnItem(this.gameObject);
     }
     #endregion
 }

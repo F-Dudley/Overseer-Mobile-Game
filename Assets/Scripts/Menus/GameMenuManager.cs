@@ -21,6 +21,7 @@ public class GameMenuManager : MonoBehaviour
     [Header("Game UI Sub-Elements")]
     [SerializeField] private GameObject shopUI;
     [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private GameObject playButton;
 
     #region Unity Functions
     private void Awake()
@@ -82,6 +83,7 @@ public class GameMenuManager : MonoBehaviour
     public void OpenGameUI()
     {
         gameUI.SetActive(true);
+        playButton.SetActive(true);
         placementUI.SetActive(false);
     }
 
@@ -89,12 +91,14 @@ public class GameMenuManager : MonoBehaviour
     {
         shopUI.SetActive(false);
         inventoryUI.SetActive(false);
+        playButton.SetActive(false);
     }
 
     public void ReturnToGameUI()
     {
         shopUI.SetActive(true);
         inventoryUI.SetActive(true);
+        playButton.SetActive(true);
     }
     #endregion
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
 public enum EnemyState
 {
@@ -33,6 +34,18 @@ public abstract class Enemy : MonoBehaviour
     [Header("Components")]
     protected NavMeshAgent agent;
 
+    #region Unity Functions
+    protected virtual void OnEnable()
+    {
+        StartMovementAnimation();
+    }
+
+    protected virtual void OnDisable()
+    {
+        transform.DOKill(false);
+    }
+    #endregion
+
     #region Base Functions
     protected void Init()
     {
@@ -63,11 +76,14 @@ public abstract class Enemy : MonoBehaviour
     public void TakeDamage(int _damage)
     {
         health -= _damage;
+        if (health <= 0) ReturnToPool();
     }
 
     public void Heal(int _regainedHealth)
     {
         health += _regainedHealth;
     }
+
+    public abstract void ReturnToPool();
     #endregion
 }

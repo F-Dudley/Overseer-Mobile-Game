@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4749095679691534390}
   - component: {fileID: 4749095679691534385}
   - component: {fileID: 573345205312441853}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Grunt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,6 +158,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: weapon_gun
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d71da9ef1a29c274ba149ba15943a00d, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d71da9ef1a29c274ba149ba15943a00d, type: 3}
 --- !u!1001 &9179734421594150371
@@ -223,9 +227,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4819223349682164798, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -3949436395788077964, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -3924740746642414787, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -2652130149045022449, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -2511240423080479738, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
       propertyPath: m_Name
       value: alien
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7668100837431030959, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c68f97ef7b20354e81a8428687d7349, type: 3}

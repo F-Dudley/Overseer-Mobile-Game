@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
+    public static GameplayManager instance;
 
     [Header("Round Variables")]
     private Coroutine gameRound;
     private bool roundActive;
 
+    [SerializeField] private int maxPoolSize = 100;
+
+    [SerializeField] public ObjectPool assaultPool;
+    [SerializeField] public ObjectPool artilleryPool;
+    [SerializeField] public ObjectPool supportPool;
+
     [Header("Player Shooting")]
-    [SerializeField] private LayerMask playerMask;
+    [SerializeField] private LayerMask enemyMask;
     [SerializeField] private bool shootingReady;
     [SerializeField] private int shootDamage = 100;
 
@@ -19,6 +26,11 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private Camera sceneCamera;
 
     #region Unity Functions
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         gameEnviromentScript = GameManager.GameEnviroment.GetComponent<GameEnviroment>();
@@ -47,7 +59,7 @@ public class GameplayManager : MonoBehaviour
 
         for (int i = 0; i < 5; i++)
         {
-            Instantiate(gameEnviromentScript.GetRandomAssultEnemy(), gameEnviromentScript.spawnPoint.position, gameEnviromentScript.spawnPoint.rotation);
+            Debug.Log("Taking Enemy From Pool");
             yield return new WaitForSeconds(1f);
         }
 
@@ -66,7 +78,7 @@ public class GameplayManager : MonoBehaviour
             shootingReady = false;
             Vector3 screenCenter = sceneCamera.ViewportToScreenPoint(new Vector2(0.5f, 0.5f));
 
-            if (Physics.Raycast(screenCenter, sceneCamera.transform.forward, out RaycastHit hitInfo, 200f, playerMask, QueryTriggerInteraction.Collide))
+            if (Physics.Raycast(screenCenter, sceneCamera.transform.forward, out RaycastHit hitInfo, 200f, enemyMask, QueryTriggerInteraction.Collide))
             {
                 if (hitInfo.collider.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
                 {

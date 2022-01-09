@@ -16,11 +16,11 @@ public class GameManager : MonoBehaviour
     public ARPlacement placementScript;
     private NavMeshSurface navMeshSurface;
 
-    public static event Action EnviromentStartPlacement;    
-    public static event Action EnviromentPlaced;
+    public static event UnityAction EnviromentStartPlacement;    
+    public static event UnityAction EnviromentPlaced;
 
-    public static event Action GameWaveStarted;
-    public static event Action GameWaveEnded;
+    public static event UnityAction GameWaveStarted;
+    public static event UnityAction GameWaveEnded;
 
     [Header("Enviroment References")]
     [SerializeField] private static GameObject gameEnviroment;
@@ -34,6 +34,27 @@ public class GameManager : MonoBehaviour
         set {
             gameEnviroment = value; 
             gameEnviromentScript = value.GetComponent<GameEnviroment>();
+        }
+    }
+
+    public static GameEnviroment GameEnviromentScript
+    {
+        get {
+            return gameEnviromentScript;
+        }
+    }
+
+    public static Transform SpawnPoint
+    {
+        get {
+            return gameEnviromentScript.spawnPoint;
+        }
+    }
+
+    public static Transform EnemyContainer
+    {
+        get {
+            return gameEnviromentScript.enemyContainer;
         }
     }
 
