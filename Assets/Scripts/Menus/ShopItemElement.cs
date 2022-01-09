@@ -15,8 +15,9 @@ public class ShopItemElement : MonoBehaviour
     [SerializeField] private Image itemSpriteUI;
 
     #region Element Functions
-    public void SetElementContents(string _itemName, int _itemPrice, Sprite _itemTexture)
+    public void SetElementContents(int _itemIndex, string _itemName, int _itemPrice, Sprite _itemTexture)
     {
+        itemIndex = _itemIndex;
         itemTitleUI.text = _itemName;
         itemPriceUI.text = _itemPrice.ToString();
         itemSpriteUI.sprite = _itemTexture;

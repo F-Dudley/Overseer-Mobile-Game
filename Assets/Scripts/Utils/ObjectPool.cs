@@ -10,15 +10,13 @@ public enum PoolObjectType
     ARTILLERY,
     SUPPORT
 }
-
 public class ObjectPool : MonoBehaviour
 {
     public PoolObjectType poolType;
 
     public Queue<GameObject> pool = new Queue<GameObject>();
+    [SerializeField] private Func<GameObject> getNewPoolItem;
 
-    private Func<GameObject> getNewPoolItem;
-    private Transform enemyContainer;
     [SerializeField] private int maxPoolSize = 100;
     [SerializeField] private int activePoolItems = 0;
 
@@ -71,13 +69,22 @@ public class ObjectPool : MonoBehaviour
     {
         if (pool.Count == 0) GrowPool();
 
-        GameObject item = pool.Dequeue();
-        item.SetActive(true);
-        item.transform.position = _targetTransform.position;
-        item.transform.rotation = _targetTransform.rotation;
+        if (pool.Count > 0)
+        {
+            GameObject item = pool.Dequeue();
+            item.SetActive(true);
+            item.transform.position = _targetTransform.position;
+            item.transform.rotation = _targetTransform.rotation;
 
-        activePoolItems++;
-        return item;
+            activePoolItems++;
+
+            return item;           
+        }
+        else
+        {
+            Debug.Log("Pool Max Size Reached");
+            return null;
+        }
     }
 
     public void ReturnItem(GameObject _itemToReturn)
@@ -88,11 +95,15 @@ public class ObjectPool : MonoBehaviour
 
     private void GrowPool()
     {
-        for (int i = 0; i < (maxPoolSize / 20); i++)
+        if (activePoolItems + pool.Count < maxPoolSize)
         {
-            GameObject newItem = Instantiate(getNewPoolItem(), GameManager.SpawnPoint.position, GameManager.SpawnPoint.rotation, GameManager.EnemyContainer);                newItem.SetActive(false);
-            newItem.SetActive(false);
-            pool.Enqueue(newItem);
+            for (int i = 0; i < (maxPoolSize / 20); i++)
+            {
+                Debug.Log(string.Format("Adding Item To - {0} Pool", poolType.ToString()));
+                GameObject newItem = Instantiate(getNewPoolItem(), GameManager.SpawnPoint.position, GameManager.SpawnPoint.rotation, GameManager.EnemyContainer);                newItem.SetActive(false);
+                newItem.SetActive(false);
+                pool.Enqueue(newItem);
+            }
         }
     }
     #endregion

@@ -26,6 +26,14 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    private int MaxBaseHealth
+    {
+        set {
+            maxBaseHealth = value;
+            GameMenuManager.instance.SetHealthUI(baseHealth, maxBaseHealth);
+        }
+    }
+
     public int ShieldHealth
     {
         get {
@@ -35,6 +43,27 @@ public class GameplayManager : MonoBehaviour
             shieldHealth = value;
             shieldHealth = Mathf.Clamp(shieldHealth, 0, maxShieldHealth);
             GameMenuManager.instance.SetShieldUI(shieldHealth, maxShieldHealth);
+        }
+    }
+
+    public int MaxShieldHealth
+    {
+        set {
+            maxShieldHealth = value;
+            GameMenuManager.instance.SetShieldUI(shieldHealth, maxShieldHealth);
+        }
+    }
+
+    public int ResourcesAmount
+    {
+        get {
+            return resourcesAmount;
+        }
+
+        set {
+            resourcesAmount = value;
+            resourcesAmount = Mathf.Clamp(resourcesAmount, 0, int.MaxValue);
+            GameMenuManager.instance.SetResourcesUI(resourcesAmount);    
         }
     }
 
@@ -96,7 +125,7 @@ public class GameplayManager : MonoBehaviour
 
         for (int i = 0; i < 5; i++)
         {
-            // assaultPool.TakeItem(GameManager.AssaultTarget, Quaternion.identity);
+            assaultPool.TakeItem(GameManager.SpawnPoint);
             Debug.Log("Taking Object From Pool");
             yield return spawnWaiter;
         }
