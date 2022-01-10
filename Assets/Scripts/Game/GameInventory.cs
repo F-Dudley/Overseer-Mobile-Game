@@ -52,6 +52,14 @@ public class GameInventory : MonoBehaviour
 
         CreateInventory();
     }
+
+    private void Update()
+    {
+        if (!GameplayManager.instance.roundActive)
+        {
+            
+        }
+    }
     #endregion
 
     #region Inventory Functions

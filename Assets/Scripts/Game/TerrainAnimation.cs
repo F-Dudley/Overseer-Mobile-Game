@@ -49,17 +49,15 @@ public class TerrainAnimation : MonoBehaviour
 
         transform.DOScale(initialEviromentScale, animationTime)
         .SetEase(Ease.InOutCubic)
-        .OnComplete(() => {
+        .OnComplete(async () => {
 
             foreach (Transform enviromentArea in enviromentObjects)
             {
-                enviromentArea.DOScale(Vector3.one, animationTime)
-                .SetEase(Ease.OutBack);
+                await enviromentArea.DOScale(Vector3.one, animationTime * 0.25f)
+                .SetEase(Ease.OutBack).AsyncWaitForCompletion();
             }
 
             animationComplete = true;
-
-            GameManager.instance.RebakeNavmesh();
         });
     }
     #endregion

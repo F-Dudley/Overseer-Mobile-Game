@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public ARPlacement placementScript;
-    private NavMeshSurface navMeshSurface;
 
     public static event UnityAction EnviromentStartPlacement;    
     public static event UnityAction EnviromentPlaced;
@@ -27,6 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Enviroment References")]
     [SerializeField] private static GameObject gameEnviroment;
     [SerializeField] private static GameEnviroment gameEnviromentScript;
+    [SerializeField] private static NavMeshSurface enviromentNavmesh;
 
     public static GameObject GameEnviroment
     {
@@ -50,13 +50,6 @@ public class GameManager : MonoBehaviour
     {
         get {
             return gameEnviromentScript.spawnPoint;
-        }
-    }
-
-    public static Transform EnemyContainer
-    {
-        get {
-            return gameEnviromentScript.enemyContainer;
         }
     }
 
@@ -86,11 +79,12 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         placementScript = GetComponent<ARPlacement>();
-        navMeshSurface = GetComponent<NavMeshSurface>();
+        enviromentNavmesh = GetComponent<NavMeshSurface>();
 
         gameEnviroment = Instantiate<GameObject>(gameEnviroment, Vector3.zero, Quaternion.identity);
-        gameEnviroment.transform.localScale *= SpawnedInItemsScalar;
         gameEnviroment.SetActive(false);
+
+        enviromentNavmesh = gameEnviroment.GetComponent<NavMeshSurface>();
     }
 
     private void OnEnable()
@@ -117,13 +111,5 @@ public class GameManager : MonoBehaviour
     public static void InvokeEnviromentPlaced() => EnviromentPlaced.Invoke();
     public static void InvokeGameWaveStarted() => GameWaveStarted.Invoke();
     public static void InvokeGameWaveEnded() => GameWaveEnded.Invoke();
-    #endregion
-
-    #region Navmesh
-    public void RebakeNavmesh()
-    {
-        Debug.Log("Rebaking Navmesh");
-        navMeshSurface.BuildNavMesh();
-    }
     #endregion
 }

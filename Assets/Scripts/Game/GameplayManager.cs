@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class GameplayManager : MonoBehaviour
     private int shieldHealth = 100;
     [SerializeField] private int maxShieldHealth = 20;
 
-    private int resourcesAmount = 0;
+    [SerializeField] private int resourcesAmount = 0;
+
+    [SerializeField] private int currentRound = 1;
 
     public int BaseHealth
     {
@@ -69,8 +72,10 @@ public class GameplayManager : MonoBehaviour
 
     [Header("Round Variables")]
     private Coroutine gameRound;
-    private bool roundActive;
+    public bool roundActive;
+    [SerializeField] private int activeEnemyAmount = 0;
 
+    [Header("Object Pool")]
     [SerializeField] private int maxPoolSize = 100;
 
     [SerializeField] public ObjectPool enemyPool;
@@ -86,7 +91,8 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private Camera sceneCamera;
 
     [Header("Wave Helpers")]
-    private WaitForSeconds spawnWaiter = new WaitForSeconds(1f);
+    private WaitForSeconds spawnOverlapWaiter = new WaitForSeconds(2f);
+    private WaitForSeconds spawnSubWaveWaiter = new WaitForSeconds(3f);
 
     #region Unity Functions
     private void Awake()
@@ -118,20 +124,75 @@ public class GameplayManager : MonoBehaviour
     private IEnumerator GameRound()
     {
         roundActive = true;
+        int roundEnemyNumber = 10 * currentRound;
 
-        for (int i = 0; i < 5; i++)
+        while (roundEnemyNumber > 0)
         {
-            enemyPool.TakeAssaultItem();
-            Debug.Log("Taking Object From Pool");
+            for (int i = 0; i < 5; i++)
+            {
+                /*
+                float randomNum = Random.Range(0, 100);
+                if (currentRound >= 20)
+                {
+                    if (randomNum > 60)
+                    {
+                        SpawnArtilleryUnit();
+                    }
+                    else if (randomNum > 30)
+                    {
+                        SpawnSupportUnit();
+                    }
+                    else SpawnAssaultUnit();
+                }
+                else if (currentRound >= 10)
+                {
+                    if (randomNum > 90)
+                    {
+                        SpawnArtilleryUnit();
+                    }
+                    else if (randomNum > 70)
+                    {
+                        SpawnSupportUnit();
+                    }
+                    else
+                    {
+                        SpawnAssaultUnit();
+                    }
+                }
+                else if (currentRound >= 5)
+                {
+                    if (randomNum > 80)
+                    {
+                        SpawnSupportUnit();
+                    }
+                    else
+                    {
+                        SpawnAssaultUnit();
+                    }
+                }
+                else SpawnAssaultUnit();
+                */
+                SpawnSupportUnit();
+
+                roundEnemyNumber--;
+
+                yield return spawnOverlapWaiter;
+            }
             
-            yield return spawnWaiter;
+            yield return spawnSubWaveWaiter;
         }
 
-        yield return new WaitForSeconds(10f);
+        while (activeEnemyAmount > 0)
+        {
+            yield return null;
+        }
 
         GameManager.InvokeGameWaveEnded();
         roundActive = false;
+        currentRound++;
     }
+
+    public void ActiveEnemyDied() => activeEnemyAmount--;
     #endregion
 
     #region Player Interaction Functionality
@@ -159,6 +220,33 @@ public class GameplayManager : MonoBehaviour
     {
         yield return shootingCooldown;
         shootingReady = true;
+    }
+
+    private void SpawnAssaultUnit()
+    {
+        GameObject spawnedEnemy = enemyPool.TakeAssaultItem();
+
+        if (spawnedEnemy != null)
+        {
+            spawnedEnemy.GetComponent<NavMeshAgent>().SetDestination(GameManager.AssaultTarget);            
+            activeEnemyAmount++;
+        }
+    }
+
+    private void SpawnArtilleryUnit()
+    {
+        GameObject spawnedEnemy = enemyPool.TakeArtilleryItem();
+        if (spawnedEnemy != null)
+        {
+        spawnedEnemy.GetComponent<NavMeshAgent>().SetDestination(GameManager.ArtilleryTarget);            
+            activeEnemyAmount++;
+        }
+    }
+
+    private void SpawnSupportUnit()
+    {
+        GameObject spawnedEnemy = enemyPool.TakeSupportItem();
+        spawnedEnemy.GetComponent<NavMeshAgent>().SetDestination(GameManager.SupportTarget);
     }
     #endregion
 

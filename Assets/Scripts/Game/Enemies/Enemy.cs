@@ -17,14 +17,12 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected EnemyState currentState;
 
     [SerializeField] protected int health;
-    [SerializeField] protected float movementSpeed;
-    [SerializeField] protected float rotationSpeed;
-
-    public Vector3 targetLocation;
+    [SerializeField] protected int maxHealth;
     [SerializeField] protected bool inAttackingPosition;
 
     [Space]
 
+    [SerializeField] protected bool attackReady;
     [SerializeField] protected float damage;
     [SerializeField] protected float attackRange;
 
@@ -36,19 +34,41 @@ public abstract class Enemy : MonoBehaviour
     protected NavMeshAgent agent;
 
     #region Unity Functions
-    protected virtual void Start()
+    protected void Start()
     {
         agent = GetComponent<NavMeshAgent>();
     }
 
-    protected virtual void OnEnable()
+    protected void Update()
     {
-        StartMovementAnimation();
+        switch (currentState)
+        {
+            case EnemyState.Moving:
+                MoveState();
+                break;
+
+            case EnemyState.Attacking:
+                AttackState();
+                break;
+
+            default:
+            break;
+        }
     }
 
-    protected virtual void OnDisable()
+    protected void OnEnable()
     {
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
+        StartMovementAnimation();
+        agent.isStopped = false;
+    }
+
+    protected void OnDisable()
+    {
+        health = maxHealth;
         transform.DOKill(false);
+        GameplayManager.instance.ActiveEnemyDied();
+        ReturnToPool();
     }
     #endregion
 

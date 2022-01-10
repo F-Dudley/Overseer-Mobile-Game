@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.AI.Navigation;
 
 [System.Serializable]
 public struct EnviromentEnemy
@@ -20,8 +21,8 @@ public class GameEnviroment : MonoBehaviour
     public Transform artilleryTarget;
     public Transform supportTarget;
 
-    [Header("Enviroment Containers")]
-    public Transform enemyContainer;
+    [Header("Enviroment Components")]
+    public NavMeshSurface navMeshSurface;
 
     [Header("Enemies")]
     public EnviromentEnemy[] assultEnemies;

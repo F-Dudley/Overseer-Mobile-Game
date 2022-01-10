@@ -14,8 +14,8 @@ TagManager:
   - NavMeshSurface
   - Water
   - UI
-  - 
-  - 
+  - Walkable
+  - NonWalkable
   - Enemies
   - 
   - 

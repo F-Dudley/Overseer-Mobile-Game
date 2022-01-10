@@ -6,47 +6,32 @@ using DG.Tweening;
 public class Grunt : Enemy
 {
     #region Unity Functions
-    protected override void Start()
+    protected new void Start()
     {
         base.Start();
-        targetLocation = GameManager.AssaultTarget;
     }
 
-    protected override void OnEnable()
+    protected new void OnEnable()
     {
         base.OnEnable();
-        agent.SetDestination(targetLocation);
     }
 
-    protected override void OnDisable()
+    protected new void OnDisable()
     {
         base.OnDisable();
         ReturnToPool();
     }
 
-    protected void Update()
+    protected new void Update()
     {
-        switch (currentState)
-        {
-            case EnemyState.Moving:
-                MoveState();
-                break;
-
-            case EnemyState.Attacking:
-                AttackState();
-                break;
-
-            default:
-            break;
-        }
-
+        base.Update();
     }
     #endregion
 
     #region States
     protected override void AttackState()
     {
-        if (inAttackingPosition)
+        if (inAttackingPosition && attackReady)
         {
             AttackTarget();
         }
@@ -56,7 +41,6 @@ public class Grunt : Enemy
     {
         if (Vector3.Distance(transform.position, GameManager.AssaultTarget) < attackRange)
         {
-            agent.isStopped = true;
             currentState = EnemyState.Attacking;
             transform.DOKill(false);
             StartAttackingAnimation();
@@ -67,19 +51,21 @@ public class Grunt : Enemy
     #region State Actions
     protected override void AttackTarget()
     {
-        
+        attackReady = false;
+        // GameplayManager.instance.DamageBase((int) damage);
     }
 
     protected override async void StartMovementAnimation()
     {
-        await bodyTransform.DORotate(new Vector3(0, -10, -5), 0.5f).AsyncWaitForCompletion();
-        bodyTransform.DORotate(new Vector3(0, 10, 5), 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+        await bodyTransform.DOLocalRotate(new Vector3(0, -10, -5), 0.5f).AsyncWaitForCompletion();
+        bodyTransform.DOLocalRotate(new Vector3(0, 10, 5), 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
     }
 
     protected override async void StartAttackingAnimation()
     {
-        await bodyTransform.DORotate(Vector3.zero, 0.5f).AsyncWaitForCompletion();
-        await weaponTransform.DORotate(new Vector3(90, 0, 0), 1.5f).AsyncWaitForCompletion();
+        bodyTransform.DOKill();
+        await bodyTransform.DOLocalRotate(Vector3.zero, 0.5f).AsyncWaitForCompletion();
+        await weaponTransform.DOLocalRotate(new Vector3(-90, 0, 0), 1.5f).AsyncWaitForCompletion();
         inAttackingPosition = true;
     }
 
